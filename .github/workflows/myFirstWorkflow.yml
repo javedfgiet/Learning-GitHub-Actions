@@ -6,7 +6,10 @@ on:
   pull_request:
     branches:
       - main
-
+env:
+  ENV_TYPE: DEV
+  APP_USER: Javed Ahmad
+  APP_PORT: 80
 jobs:
   JOB1:
    runs-on: ubuntu-latest
@@ -38,18 +41,14 @@ jobs:
     needs: JOB1
     runs-on: ubuntu-latest
     steps:
-      - name: Checking Current Directory
-        run: |
-          pwd
-          ls -ltr
       - name: Download Single file artifact
         uses: actions/download-artifact@v7.0.0
         with:
           name: single_file
-      - name: Checking current directory post download
+      - name: Refring Environment Variables
         run: |
-           pwd
-           ls -ltr
+          echo "[INFO] Runing Deployment for $ENV_TYPE with $APP_USER"
+          echo "[INO] Once deployment application is accessible on port $APP_PORT"
            
         
       
