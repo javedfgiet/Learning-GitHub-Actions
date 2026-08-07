@@ -122,7 +122,7 @@ jobs:
         echo "CHECKING SINGLE FILE DIRECTORY"
         ls -ltr single_file
         echo "CHECKING DIRECTORY ARTIFACT"
-        ls -ltr downll
+        ls -ltr download_directory
      
            
         
