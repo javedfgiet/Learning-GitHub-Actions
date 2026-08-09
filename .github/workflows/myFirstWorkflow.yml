@@ -63,5 +63,29 @@ jobs:
          echo "[INFO] New Changes are added by${{github.actor}} in ${{github.ref_name}} branch" 
          echo "[INFO] Current Step is running on ${{runner.os}}"
          echo "[INFO] Current JOB ID is ${{job.check_run_id}}"
+
+  staging:
+   name: STAGE DEPLOYMENT
+   runs-on: ubuntu-latest
+   steps:
+     - name: Refering Environment Variable
+       run: echo "[INFO] Running deployment on ${{vars.HOST}} using ${{vars.USER}}."
+     - name: Refering Environment Secret
+       run: echo "[INFO] Password for ${{vars.USER}} is ${{secrets.PASSWORD}}"
+   environment:
+      name: STAGING
+      
+  production:
+   name: PRODUCTION DEPLOYMENT
+   runs-on: ubuntu-latest
+   steps:
+     - name: Refering Environment Variable
+       run: echo "[INFO] Running deployment on ${{vars.HOST}} using ${{vars.USER}}."
+     - name: Refering Environment Secret
+       run: echo "[INFO] Password for ${{vars.USER}} is ${{secrets.PASSWORD}}" 
+   environment:
+      name: PRODUCTION
+       
+ 
         
       
