@@ -1,16 +1,8 @@
 name: my-first-workflow
 on: 
-  push:
-   branches:
-      - main
-      - dev
-  pull_request:
-    branches:
-      - main
-env:
-  ENV_TYPE: DEV
-  APP_USER: Javed Ahmad
-  APP_PORT: 80
+  workflow_dispatch:
+  push: 
+
 jobs:
   JOB1:
    runs-on: ubuntu-latest
