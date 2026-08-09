@@ -29,99 +29,58 @@ jobs:
          name: single_file
          path: ./myartifact.txt
          
-     - name: Upload from directory
-       uses: actions/upload-artifact@v7.0.1
-       with:
-         name: directory_artifact
-         path: artifacts/
-         
-     - name: upload from multiple paths
-       uses: actions/upload-artifact@v7.0.1
-       with:
-         name: multiple_path
-         path: |
-            ./myartifact.txt
-            artifacts/
-            
-     - name: upload from multiple paths with exclusion
-       uses: actions/upload-artifact@v7.0.1
-       with:
-         name: multiple_path_with_exclusion
-         path: |
-            ./myartifact.txt
-            artifacts/
-            !**/hostname.txt
-
   job2:
     name: JOB2
     needs: JOB1
     runs-on: ubuntu-latest
     steps:
-      - name: Checking Current Directory
-        run: |
-          pwd
-          ls -ltr
       - name: Download Single file artifact
         uses: actions/download-artifact@v7.0.0
         with:
           name: single_file
-      - name: Checking current directory post download
+      - name: Refring Environment Variables
         run: |
-           pwd
-           ls -ltr
+          echo "[INFO] Runing Deployment for $ENV_TYPE with $APP_USER"
+          echo "[INO] Once deployment application is accessible on port $APP_PORT"
+      - name: Refering Repo Secret
+        run: |
+           echo "[INFO] Application password is ${{secrets.APP_PASSWORD}}"
+
   job3:
    name: JOB3
-   needs: JOB1
    runs-on: ubuntu-latest
    steps:
-     - name: Checking Current directory
+     - name: Refering context or in-built variable
        run: |
-         pwd
-         ls -ltr
-     - name: Download Directory
-       uses: actions/download-artifact@v7.0.0
-       with:
-         name: directory_artifact
-     - name: chekcing current directory post download
-       run: |
-        pwd
-        ls -ltr
+         echo "[INFO] Triggered By ${{github.event_name}}"
+         echo "[INFO] New Changes are added by${{github.actor}} in ${{github.ref_name}} branch" 
+         echo "[INFO] Current Step is running on ${{runner.os}}"
+         echo "[INFO] Current JOB ID is ${{job.check_run_id}}"
 
-  job4:
-   name: JOB4
-   needs: JOB1
+  staging:
+   name: STAGE DEPLOYMENT
    runs-on: ubuntu-latest
    steps:
-     - name: Creating custom folder for download
-       run: |
-         mkdir -p single_file
-         mkdir -p download_directory
-         
-     - name: Checking Current directory
-       run: |
-         pwd
-         ls -ltr
-         
-     - name: Download single file artifact
-       uses: actions/download-artifact@v7.0.0
-       with:
-         name: single_file
-         path: single_file
-         
-     - name: Download Directory
-       uses: actions/download-artifact@v7.0.0
-       with:
-         name: directory_artifact
-         path: download_directory
-         
-     - name: chekcing current directory post download
-       run: |
-        pwd
-        echo "CHECKING SINGLE FILE DIRECTORY"
-        ls -ltr single_file
-        echo "CHECKING DIRECTORY ARTIFACT"
-        ls -ltr download_directory
-     
-           
+     - name: Refering Environment Variable
+       run: echo "[INFO] Running deployment on ${{vars.HOST}} using ${{vars.USER}}."
+     - name: Refering Environment Secret
+       run: echo "[INFO] Password for ${{vars.USER}} is ${{secrets.PASSWORD}} ."
+   environment:
+      name: STAGING
+   if: github.ref == 'refs/heads/dev'
+   
+  production:
+   name: PRODUCTION DEPLOYMENT
+   runs-on: ubuntu-latest
+   steps:
+     - name: Refering Environment Variable
+       run: echo "[INFO] Running deployment on ${{vars.HOST}} using ${{vars.USER}}."
+     - name: Refering Environment Secret
+       run: echo "[INFO] Password for ${{vars.USER}} is ${{secrets.PASSWORD}}" 
+   environment:
+      name: PRODUCTION
+   if: github.ref == 'refs/heads/main'
+       
+ 
         
       
