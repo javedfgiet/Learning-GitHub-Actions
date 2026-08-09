@@ -71,7 +71,7 @@ jobs:
      - name: Refering Environment Variable
        run: echo "[INFO] Running deployment on ${{vars.HOST}} using ${{vars.USER}}."
      - name: Refering Environment Secret
-       run: echo "[INFO] Password for ${{vars.USER}} is ${{secrets.PASSWORD}}"
+       run: echo "[INFO] Password for ${{vars.USER}} is ${{secrets.PASSWORD}} ."
    environment:
       name: STAGING
       
