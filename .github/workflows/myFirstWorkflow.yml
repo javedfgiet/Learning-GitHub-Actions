@@ -1,86 +1,27 @@
-name: my-first-workflow
+name: CI pipeline
+# TO get a trigger on every push to main branch.
 on: 
   workflow_dispatch:
   push: 
+   branches:
+     - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  actions: read
+  security-events: write
+  packages: write
+  contents: read
 
 jobs:
-  JOB1:
-   runs-on: ubuntu-latest
-   steps:
-     - name: Step-1
-       run: |
-          pwd
-          ls -ltr
-          hostname
-     - name: Step-2 Checkout
-       uses: actions/checkout@v5.1.0
-     - name: Step-3
-       run: |
-          echo `pwd` >> myartifact.txt
-          mkdir artifacts
-          echo `ls -ltr` >> artifacts/list.txt
-          echo `hostname` >> artifacts/hostname.txt
-          ls -ltr
-          hostname
-          
-     - name: Upload Single file
-       uses: actions/upload-artifact@v7.0.1
-       with:
-         name: single_file
-         path: ./myartifact.txt
-         
-  job2:
-    name: JOB2
-    needs: JOB1
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download Single file artifact
-        uses: actions/download-artifact@v7.0.0
-        with:
-          name: single_file
-      - name: Refring Environment Variables
-        run: |
-          echo "[INFO] Runing Deployment for $ENV_TYPE with $APP_USER"
-          echo "[INO] Once deployment application is accessible on port $APP_PORT"
-      - name: Refering Repo Secret
-        run: |
-           echo "[INFO] Application password is ${{secrets.APP_PASSWORD}}"
+  ci-pipeline-job:
+    uses: javedfgiet/reusable-workflows/.github/workflows/ci-pipeline.yaml@main
+    secrets:
+      SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
 
-  job3:
-   name: JOB3
-   runs-on: ubuntu-latest
-   steps:
-     - name: Refering context or in-built variable
-       run: |
-         echo "[INFO] Triggered By ${{github.event_name}}"
-         echo "[INFO] New Changes are added by${{github.actor}} in ${{github.ref_name}} branch" 
-         echo "[INFO] Current Step is running on ${{runner.os}}"
-         echo "[INFO] Current JOB ID is ${{job.check_run_id}}"
 
-  staging:
-   name: STAGE DEPLOYMENT
-   runs-on: ubuntu-latest
-   steps:
-     - name: Refering Environment Variable
-       run: echo "[INFO] Running deployment on ${{vars.HOST}} using ${{vars.USER}}."
-     - name: Refering Environment Secret
-       run: echo "[INFO] Password for ${{vars.USER}} is ${{secrets.PASSWORD}} ."
-   environment:
-      name: STAGING
-   if: github.ref == 'refs/heads/dev'
-   
-  production:
-   name: PRODUCTION DEPLOYMENT
-   runs-on: ubuntu-latest
-   steps:
-     - name: Refering Environment Variable
-       run: echo "[INFO] Running deployment on ${{vars.HOST}} using ${{vars.USER}}."
-     - name: Refering Environment Secret
-       run: echo "[INFO] Password for ${{vars.USER}} is ${{secrets.PASSWORD}}" 
-   environment:
-      name: PRODUCTION
-   if: github.ref == 'refs/heads/main'
-       
- 
-        
+
+  
       
