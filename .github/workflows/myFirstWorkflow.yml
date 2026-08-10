@@ -32,8 +32,8 @@ jobs:
            --cov=app \
            --cov-report=xml:reports/coverage.xml \
            --cov-report=html:reports/html \
+           --cov-report=term-missing \
            -v
-
 
      - name: Upload code coverage report
        uses: actions/upload-artifact@v7.0.1
