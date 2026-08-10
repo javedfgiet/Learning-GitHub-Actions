@@ -41,6 +41,28 @@ jobs:
          name: unit-test-coverage-report
          path: reports/
 
+  codeql:
+      name: CodeQL Security Scan
+      runs-on: ubuntu-latest
+      permissions:
+        actions: read
+        contents: read
+        security-events: write #Required to upload the results of the CodeQL analysis to GitHub
+      strategy:
+        matrix:
+          language: [ 'python' ]
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v6.1.0
+        - name: Initialize CodeQL
+          uses: github/codeql-action/init@v3.6.0
+          with:
+            languages: ${{ matrix.language }}
+        - name: Perform CodeQL Analysis
+          uses: github/codeql-action/analyze@v3.6.0
+          with:
+            category: "security"
+
 
         
       
