@@ -1,4 +1,5 @@
 name: CI pipeline
+# TO get a trigger on every push to main branch.
 on: 
   workflow_dispatch:
   push: 
